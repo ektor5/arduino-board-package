@@ -47,7 +47,8 @@ static void arduino_user_task2 (uint32_t);
 static void arduino_user_task3 (uint32_t);
 #endif
 
-//#define MQX_LOG_TT
+#define MQX_LOG_TT
+#define MQX_LOG
 #define ARDUINO_SERIAL_DEBUG_RX
 
 // ----------------------------------------------------------------------------------------------
@@ -63,7 +64,7 @@ const TASK_TEMPLATE_STRUCT  MQX_template_list[] =
     { 4,			arduino_yield_task,		1500,	9,			"arduino_yield",	0,						0,     0 },
     { 5,			test_task,				1500,	9,			"test",				0,						0,     0 },
 #ifdef ARDUINO_SERIAL_DEBUG_RX
-    { 6,			mqx_mccuart_receive_task,	1500,	9,			"mccrx",			0,						0,     0 },
+    { 100,			mqx_mccuart_receive_task,	1500,	9,			"mccrx",			0,						0,     0 },
 #endif
 #ifdef USER_TASK_ENABLED
     { 7,			arduino_user_task1,		1500,	9,			"user_task1",		0,						0,     0 },
