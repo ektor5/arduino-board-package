@@ -26,6 +26,7 @@
 #include "mqx.h"
 #include "bsp.h"
 
+#define MQX_LOG
 #include "log_mqx.h"
 #include "Arduino.h"
 
@@ -39,6 +40,7 @@ static void arduino_loop_task(uint32_t);
 static void arduino_yield_task (uint32_t);
 static void test_task (uint32_t);
 extern void mqx_mccuart_receive_task (uint32_t);
+extern void rpmsgTask(uint32_t param);
 
 //#define USER_TASK_ENABLED
 #ifdef USER_TASK_ENABLED
@@ -47,8 +49,9 @@ static void arduino_user_task2 (uint32_t);
 static void arduino_user_task3 (uint32_t);
 #endif
 
+#define RPMSG_TASK 100
+
 #define MQX_LOG_TT
-#define MQX_LOG
 #define ARDUINO_SERIAL_DEBUG_RX
 
 // ----------------------------------------------------------------------------------------------
@@ -64,13 +67,14 @@ const TASK_TEMPLATE_STRUCT  MQX_template_list[] =
     { 4,			arduino_yield_task,		1500,	9,			"arduino_yield",	0,						0,     0 },
     { 5,			test_task,				1500,	9,			"test",				0,						0,     0 },
 #ifdef ARDUINO_SERIAL_DEBUG_RX
-    { 100,			mqx_mccuart_receive_task,	1500,	9,			"mccrx",			0,						0,     0 },
+    { 6,			mqx_mccuart_receive_task,	1500,	9,			"mccrx",			0,						0,     0 },
 #endif
 #ifdef USER_TASK_ENABLED
     { 7,			arduino_user_task1,		1500,	9,			"user_task1",		0,						0,     0 },
     { 8,			arduino_user_task2,		1500,	9,			"user_task2",		0,						0,     0 },
     { 9,			arduino_user_task3,		1500,	9,			"user_task3",		0,						0,     0 },
 #endif
+    { RPMSG_TASK,       rpmsgTask,      2048, 8,"rpmsgTask",  0,                  0,     0 },
     { 0 }
 };
 
